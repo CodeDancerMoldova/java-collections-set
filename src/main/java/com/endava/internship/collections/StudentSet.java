@@ -99,25 +99,17 @@ public class StudentSet implements Set<Student> {
         return new BinarySearchIterator();
     }
 
-
     @Override
     public Object[] toArray() {
+        int i=0;
         Object[] results = new Object[size];
-        extract(root, results, 0);
+        ArrayList arrayList = new ArrayList();
+        inorderForToArray(root,arrayList);
+        for (Object o:arrayList){
+            results[i++] = o;
+        }
         return results;
     }
-
-    private int extract(Node root, Object[] obs, int index) {
-        if (root.left != null) {
-            index = extract(root.left, obs, index);
-        }
-        if (root.right != null) {
-            index = extract(root.right, obs, index);
-        }
-        obs[index] = root.value;
-        return index + 1;
-    }
-
 
     private void inorderForToArray(Node root, ArrayList studentsNode) {
         if (root != null) {
@@ -176,13 +168,14 @@ public class StudentSet implements Set<Student> {
             root.right = deleteNode(root.right, student);
         } else {
             markForContainsDelete = true;
-            if (root.left == null)
+            if (root.left == null){
                 return root.right;
-            else if (root.right == null)
+            }
+            else if (root.right == null){
                 return root.left;
+            }
             root.value = minValue(root.right);
             root.right = deleteNode(root.right, root.value);
-
         }
         return root;
     }
@@ -206,17 +199,26 @@ public class StudentSet implements Set<Student> {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuffer string = new StringBuffer();
-        inorderPrint(root, string);
+        string.append('[');
+        inorderPrint(root, string,0);
+        string.append(']');
         return string.toString();
     }
 
-    private void inorderPrint(Node root, StringBuffer stringBuffer) {
-        if (root != null) {
-            inorderPrint(root.left, stringBuffer);
-            stringBuffer.append("[" + root.value.toString() + ",");
-            inorderPrint(root.right, stringBuffer);
+    private void inorderPrint(Node root, StringBuffer stringBuffer,int index)
+    {
+        index++;
+        if (root != null)
+        {
+            inorderPrint(root.left, stringBuffer,index);
+            stringBuffer.append(root.value.toString());
+            if(index!=size){
+                stringBuffer.append(", ");
+            }
+            inorderPrint(root.right, stringBuffer,index);
         }
     }
 
